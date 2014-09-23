@@ -238,7 +238,7 @@ Block comments should generally be avoided, as code should be as self-documentin
 {
     self = [super init]; // or call the designated initalizer
     if (self)
-		{
+    {
         // Custom initialization
     }
 
