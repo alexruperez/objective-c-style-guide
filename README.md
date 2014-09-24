@@ -100,8 +100,8 @@ view.backgroundColor = [UIColor orangeColor];
 
 **Not:**
 ```objc
-_text = @“text”;
-[self setText:@“text"];
+_text = @"text";
+[self setText:@"text"];
 [view setBackgroundColor:[UIColor orangeColor]];
 UIApplication.sharedApplication.delegate;
 ```
@@ -118,11 +118,6 @@ if (self)
     return;
 }
 else
-{
-    return;
-}
-
-if (self)
 {
     return;
 }
@@ -143,11 +138,6 @@ if (self)
     return;
 else
     return;
-
-if (self)
-    return;
-
-if (self) return;
 ```
 
 * There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but often there should probably be new methods.
@@ -279,7 +269,7 @@ Property definitions should be used in place of naked instance variables wheneve
 @interface GIGSection : NSObject
 {
     NSString *headline;
-		NSInteger total_count;
+    NSInteger total_count;
 }
 
 @property (assign, nonatomic) NSInteger _count;
@@ -377,8 +367,8 @@ NSNumber *shouldUseLiterals = @YES;
 NSNumber *buildingZIPCode = @10018;
 
 NSString *string = array[0];
-NSString *string = dictionary[@“key"];
-mutableArray[0] = self; !
+NSString *string = dictionary[@"key"];
+mutableArray[0] = self;
 mutableDictionary[@"key"] = @"value";
 ```
 
@@ -391,7 +381,7 @@ NSNumber *shouldUseLiterals = [NSNumber numberWithBool:YES];
 NSNumber *buildingZIPCode = [NSNumber numberWithInteger:10018];
 
 NSString *string = [array objectAtIndex:0];
-NSString *string = [dictionary objectForKey:@“key"];
+NSString *string = [dictionary objectForKey:@"key"];
 [mutableArray replaceObjectAtIndex:0 withObject:self];
 [mutableDictionary setObject:@"value" forKey:@"key"];
 ```
@@ -499,11 +489,11 @@ typedef void(^GIGLoadingCompletion)(BOOL success, id result, NSError *error);
 
 ```objc
 [UIView animateWithDuration:1.0f
-								 animations:^{
-								 
-								 }
-								 completion:^(BOOL finished) {
-									 
+		 animations:^{
+	 
+		 }
+		 completion:^(BOOL finished) {
+
 }];
 
 - (void)performWithInlineCompletion:(void(^)(BOOL success, id result, NSError *error))completion
