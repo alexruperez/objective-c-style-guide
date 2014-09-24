@@ -15,6 +15,8 @@ Here are some of the documents from Apple that informed the style guide. If some
 
 ## Table of Contents
 
+* [Variable initialization](#variable-initialization)
+* [Whitespace](#whitespace)
 * [Dot-Notation Syntax](#dot-notation-syntax)
 * [Spacing](#spacing)
 * [Conditionals](#conditionals)
@@ -30,24 +32,76 @@ Here are some of the documents from Apple that informed the style guide. If some
 * [Constants](#constants)
 * [Enumerated Types](#enumerated-types)
 * [Bitmasks](#bitmasks)
+* [Blocks](#blocks)
 * [Private Properties](#private-properties)
 * [Image Naming](#image-naming)
 * [Booleans](#booleans)
 * [Singletons](#singletons)
+* [ViewController](#viewcontroller)
 * [Xcode Project](#xcode-project)
 
-## Dot-Notation Syntax
+## Variable initialization
 
-Dot-notation should **always** be used for accessing and mutating properties. Bracket notation is preferred in all other instances.
+Always give a value. Declare and initialize them just before use.
 
 **For example:**
 ```objc
+NSInteger i = 0;
+NSError *error = nil;
+```
+
+**Not:**
+```objc
+NSInteger i;
+NSError *error;
+NSError* error;
+NSError *cool_error;
+```
+
+## Whitespace
+
+Consistant horizontal and vertical spaces. Use vertical whitespace to divide logic pieces. Whitespace matters.
+
+**For example:**
+```objc
+CGFloat x = 0.0f;
+CGFloat y = 0.0f;
+
+x += 20.0f;
+y = x + 20.0f;
+x = y + 30.0f;
+
+return (x + y);
+```
+
+**Not:**
+```objc
+CGFloat x = 0.0f;
+
+CGFloat y = 0.0f;
+x += 20.0f;
+y = x+20.0f;
+
+x = y+30.0f;
+return x+y;
+```
+
+## Dot-Notation Syntax
+
+Dot-notation should **always** be used for accessing and mutating properties. Bracket notation is preferred in all other instances. Use the underscore ivar only on init and dealloc methods.
+
+**For example:**
+```objc
+self.text = @"text";
+NSString *text = self.text;
 view.backgroundColor = [UIColor orangeColor];
 [UIApplication sharedApplication].delegate;
 ```
 
 **Not:**
 ```objc
+_text = @“text”;
+[self setText:@“text"];
 [view setBackgroundColor:[UIColor orangeColor]];
 UIApplication.sharedApplication.delegate;
 ```
@@ -59,15 +113,43 @@ UIApplication.sharedApplication.delegate;
 
 **For example:**
 ```objc
-if (user.isHappy)
+if (self)
 {
-//Do something
+    return;
 }
 else
 {
-//Do something else
+    return;
+}
+
+if (self)
+{
+    return;
 }
 ```
+
+**Not:**
+```objc
+if(self) {
+    return;
+} else {
+    return;
+}
+
+if (self) return;
+else return;
+
+if (self)
+    return;
+else
+    return;
+
+if (self)
+    return;
+
+if (self) return;
+```
+
 * There should be exactly one blank line between methods to aid in visual clarity and organization. Whitespace within methods should separate functionality, but often there should probably be new methods.
 * `@synthesize` and `@dynamic` should each be declared on new lines in the implementation.
 
@@ -115,7 +197,7 @@ When methods return an error parameter by reference, switch on the returned valu
 
 **For example:**
 ```objc
-NSError *error;
+NSError *error = nil;
 if (![self trySomethingWithError:&error])
 {
     // Handle Error
@@ -140,7 +222,36 @@ In method signatures, there should be a space after the scope (-/+ symbol). Ther
 
 **For Example**:
 ```objc
-- (void)setExampleText:(NSString *)text image:(UIImage *)image;
+- (void)setExampleText:(NSString *)text image:(UIImage *)image
+{
+
+}
+
+- (void)method
+{
+
+}
+
+- (void)methodWithParameter:(NSString *)parameter
+{
+
+}
+```
+
+**Not:**
+```objc
+- (void) setExampleText: (NSString *) text image:(UIImage*)image
+{
+
+}
+
+-(void)method {
+
+}
+- (void) methodWithParameter: (NSString*) parameter
+{
+
+}
 ```
 ## Variables
 
@@ -156,6 +267,8 @@ Property definitions should be used in place of naked instance variables wheneve
 @interface GIGSection: NSObject
 
 @property (nonatomic) NSString *headline;
+@property (assign, nonatomic, readwrite) NSInteger count;
+@property (assign, nonatomic, readwrite) NSInteger totalCount;
 
 @end
 ```
@@ -166,7 +279,12 @@ Property definitions should be used in place of naked instance variables wheneve
 @interface GIGSection : NSObject
 {
     NSString *headline;
+		NSInteger total_count;
 }
+
+@property (assign, nonatomic) NSInteger _count;
+
+@end
 ```
 
 #### Variable Qualifiers
@@ -257,6 +375,11 @@ NSArray *names = @[@"Brian", @"Matt", @"Chris", @"Alex", @"Steve", @"Paul"];
 NSDictionary *productManagers = @{@"iPhone" : @"Kate", @"iPad" : @"Kamal", @"Mobile Web" : @"Bill"};
 NSNumber *shouldUseLiterals = @YES;
 NSNumber *buildingZIPCode = @10018;
+
+NSString *string = array[0];
+NSString *string = dictionary[@“key"];
+mutableArray[0] = self; !
+mutableDictionary[@"key"] = @"value";
 ```
 
 **Not:**
@@ -266,6 +389,11 @@ NSArray *names = [NSArray arrayWithObjects:@"Brian", @"Matt", @"Chris", @"Alex",
 NSDictionary *productManagers = [NSDictionary dictionaryWithObjectsAndKeys: @"Kate", @"iPhone", @"Kamal", @"iPad", @"Bill", @"Mobile Web", nil];
 NSNumber *shouldUseLiterals = [NSNumber numberWithBool:YES];
 NSNumber *buildingZIPCode = [NSNumber numberWithInteger:10018];
+
+NSString *string = [array objectAtIndex:0];
+NSString *string = [dictionary objectForKey:@“key"];
+[mutableArray replaceObjectAtIndex:0 withObject:self];
+[mutableDictionary setObject:@"value" forKey:@"key"];
 ```
 
 ## CGRect Functions
@@ -298,14 +426,16 @@ CGFloat height = frame.size.height;
 
 ## Constants
 
-Constants are preferred over in-line string literals or numbers, as they allow for easy reproduction of commonly used variables and can be quickly changed without the need for find and replace. Constants should be declared as `static` constants and not `#define`s unless explicitly being used as a macro.
+Constants are preferred over in-line string literals or numbers, as they allow for easy reproduction of commonly used variables and can be quickly changed without the need for find and replace. Constants should be declared as `static` constants and not `#define`s unless explicitly being used as a macro. Global or public constants should have the 3 characters prefix.
 
 **For example:**
 
 ```objc
-static NSString * const GIGAboutViewControllerCompanyName = @"Gigigo Mobile Services";
+static NSString * const kGIGAboutViewControllerCompanyName = @"Gigigo Mobile Services";
 
-static const CGFloat GIGImageThumbnailHeight = 50.0;
+static CGFloat const kGIGImageThumbnailHeight = 50.0f;
+
+static CGPoint const kGIGDefaultPoint = { 0.0f, 0.0f };
 ```
 
 **Not:**
@@ -314,6 +444,8 @@ static const CGFloat GIGImageThumbnailHeight = 50.0;
 #define CompanyName @"Gigigo Mobile Services"
 
 #define thumbnailHeight 2
+
+#define defaultPoint CGPointMake(0.0f,0.0f)
 ```
 
 ## Enumerated Types
@@ -342,6 +474,42 @@ typedef NS_OPTIONS(NSUInteger, GIGAdCategory) {
   GIGAdCategoryRealState  = 1 << 2,
   GIGAdCategoryTechnology = 1 << 3
 };
+```
+
+## Blocks
+
+**For example:**
+
+```objc
+[UIView animateWithDuration:1.0f animations:^{
+
+} completion:^(BOOL finished) {
+
+}];
+
+typedef void(^GIGLoadingCompletion)(BOOL success, id result, NSError *error);
+
+- (void)performWithCompletion:(GIGLoadingCompletion)completion
+{
+
+}
+```
+
+**Not:**
+
+```objc
+[UIView animateWithDuration:1.0f
+								 animations:^{
+								 
+								 }
+								 completion:^(BOOL finished) {
+									 
+}];
+
+- (void)performWithInlineCompletion:(void(^)(BOOL success, id result, NSError *error))completion
+{
+
+}
 ```
 
 ## Private Properties
@@ -436,6 +604,59 @@ Singleton objects should use a thread-safe pattern for creating their shared ins
 }
 ```
 This will prevent [possible and sometimes prolific crashes](http://cocoasamurai.blogspot.com/2011/04/singletons-your-doing-them-wrong.html).
+
+## ViewController
+
+```objc
+
+@interface GIGViewController ()
+
+@property (weak, nonatomic) IBOutlet UIButton *buttonWhatever;
+
+@end
+
+@implementation GIGViewController
+
+#pragma mark - Init and Dealloc
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changedWhatever:) name:@"GIGWhateverNotification" object:nil];
+}
+
+#pragma mark - Custom Accessors
+
+#pragma mark - IBActions
+
+- (IBAction)tapButtonWhatever
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+#pragma mark - Notifications
+
+- (void)changedWhatever:(NSNotification *)notification
+{
+    // Handle notification
+}
+
+#pragma mark - Public Methods
+
+#pragma mark - Private Methods
+
+#pragma mark - Protocols & Delegates
+
+@end
+```
 
 ## Xcode project
 
