@@ -1,6 +1,6 @@
 # Gigigo Objective-C Style Guide
 
-This style guide outlines the coding conventions of the iOS team at Gigigo Mobile Services. We welcome your feedback in [issues](https://github.com/gigigoapps/objetive-c-style-guide/issues), [pull requests](https://github.com/gigigoapps/objetive-c-style-guide/pulls) and [tweets](https://twitter.com/gigigoapps).
+This style guide outlines the coding conventions of the iOS team at Gigigo Mobile Services. We welcome your feedback in [issues](https://github.com/gigigoapps/objective-c-style-guide/issues), [pull requests](https://github.com/gigigoapps/objective-c-style-guide/pulls) and [tweets](https://twitter.com/gigigoapps).
 
 Thanks to all of [our contributors](https://github.com/gigigoapps/objective-c-style-guide/contributors).
 
@@ -356,7 +356,7 @@ Block comments should generally be avoided, as code should be as self-documentin
 {
     self = [super init]; // or call the designated initalizer
     if (self)
-		{
+    {
         // Custom initialization
     }
 
